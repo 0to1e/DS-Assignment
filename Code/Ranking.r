@@ -7,7 +7,7 @@ library(openxlsx)
 # #                              #
 # ################################
 
-school_dataset <- read_csv("Cleaned_datasets/Schools/Schools_Clean.csv")
+school_dataset <- read_csv("Cleaned_datasets/Schools/school_cleaned_data.csv")
 
 # Rank and select top 10 entries for each county
 top_schools_by_county <- school_dataset %>%

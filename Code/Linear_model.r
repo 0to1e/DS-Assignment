@@ -1,6 +1,6 @@
 library(tidyverse)
 
-school_dataset <- read_csv("Cleaned_datasets/Schools/Schools_Clean.csv")
+school_dataset <- read_csv("Cleaned_datasets/Schools/school_cleaned_data.csv")
 house_dataset <- read_csv("Cleaned_datasets/House_Pricing_Data/clean_house_pricing_data.csv")
 
 
@@ -34,17 +34,17 @@ ggplot(merged_dataset, aes(x = Price, y = ATT8SCR)) +
   geom_point(color = "blue", alpha = 0.5) + # Scatter plot of data points
   geom_smooth(method = "lm", color = "red", se = FALSE) + # Line of best fit
   labs(
-    title = "Relationship between School ATT8 Scores and House Prices",
+    title = "Line of best fit between School ATT8 Scores and House Prices",
     x = "House Price",
     y = "ATT8 Score"
   ) +
   theme_minimal()
 
-ggsave(paste0(getwd(), "/Graphs/Linear_Models/Relationship between School ATT8 Scores and House Prices.png"))
+ggsave(paste0(getwd(), "/Graphs/Linear_Models/Line of best fit between School ATT8 Scores and House Prices.png"))
 
 ####################################################################################################################################################
 
-school_dataset <- read_csv("Cleaned_datasets/Schools/Schools_Clean.csv")
+school_dataset <- read_csv("Cleaned_datasets/Schools/school_cleaned_data.csv")
 broadband_performance_dataset <- read_csv("Cleaned_datasets/Broadband/clean_broadband_performance.csv")
 
 merged_dataset <- merge(
@@ -67,12 +67,13 @@ ggplot(merged_dataset, aes(x = `Average download speed (Mbit/s)`, y = ATT8SCR)) 
   geom_point(color = "blue", alpha = 0.5) + # Scatter plot of data points
   geom_smooth(method = "lm", color = "red", se = FALSE) + # Line of best fit
   labs(
-    title = "Relationship between Average Download Speed and Attainment 8 Score",
+    title = "Line of best fit between Average Download Speed and Attainment 8 Score",
     x = "Average Download Speed (Mbit/s)",
     y = "Attainment 8 Score"
   ) +
   theme_minimal()
 
+ggsave(paste0(getwd(), "/Graphs/Linear_Models/Line of best fit between Average Download Speed and Attainment 8 Score.png"))
 ####################################################################################################################################################
 
 broadband_dataset <- read_csv("Cleaned_datasets/Broadband/clean_broadband_performance.csv")
@@ -148,14 +149,14 @@ ggplot(merged_dataset, aes(x = `Average download speed (Mbit/s)`, y = offence_ra
   geom_point(color = "blue", alpha = 0.5) + # Scatter plot of data points
   geom_smooth(method = "lm", color = "red", se = FALSE) + # Line of best fit
   labs(
-    title = "Relationship between Average Download Speed and Drug Offence Rates per 10000 people",
+    title = "Line of best fit between Average Download Speed and Drug Offence Rates per 10000 people",
     x = "Average Download Speed (Mbit/s)",
     y = "Drug Offence Rate per 1000 Population"
   ) +
   theme_minimal()
 
 
-ggsave(paste0(getwd(), "/Graphs/Linear_Models/Relationship between Average Download Speed and Drug Offence Rates per 10000 people.png"))
+ggsave(paste0(getwd(), "/Graphs/Linear_Models/Line of best fit between Average Download Speed and Drug Offence Rates per 10000 people.png"))
 
 ####################################################################################################################################################
 
@@ -216,13 +217,13 @@ ggplot(merged_data, aes(x = offence_rate, y = Price)) +
   geom_smooth(method = "lm", color = "red", se = FALSE) +
   scale_y_continuous(trans = "log10") + # Plot the data points# Line of best fit
   labs(
-    title = "House Price vs Drug Offence Rate (2023)",
+    title = "Line of best fit between House Price and Drug Offence Rate (2023)",
     x = "Offence Rate",
     y = "House Price"
   ) +
   theme_minimal()
 
-ggsave(paste0(getwd(), "/Graphs/Linear_Models/Relationship between House Price vs Drug Offence Rate (2023).png"))
+ggsave(paste0(getwd(), "/Graphs/Linear_Models/Line of best fit between House Price and Drug Offence Rate (2023).png"))
 
 ####################################################################################################################################################
 
@@ -244,10 +245,10 @@ ggplot(merged_data, aes(x = `Average download speed (Mbit/s)`, y = Price)) +
   scale_y_continuous(trans = "log10") + # Plot the data points
   geom_smooth(method = "lm", color = "red", se = FALSE) + # Line of best fit
   labs(
-    title = "House Price vs Average Download Speed",
+    title = "Line of best fit between House Price and Average Download Speed",
     x = "Average Download Speed (Mbit/s)",
     y = "House Price"
   ) +
   theme_minimal()
 
-ggsave(paste0(getwd(), "/Graphs/Linear_Models/Relationship between House Price and Average Download Speed.png"))
+ggsave(paste0(getwd(), "/Graphs/Linear_Models/Line of best fit between House Price and Average Download Speed.png"))

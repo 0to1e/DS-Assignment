@@ -91,7 +91,7 @@ ggsave(paste0(getwd(), "/Graphs/House_Pricing/Line_Avg_Price_Town.png"))
 broadband_performance_dataset <- read_csv("Cleaned_datasets/Broadband/clean_broadband_performance.csv")
 
 # Generate a boxplot of average download speeds by county
-ggplot(broadband_performance_dataset, aes(x = county, y = `Average download speed (Mbit/s)`, fill = county)) +
+ggplot(broadband_performance_dataset, aes(x = County, y = `Average download speed (Mbit/s)`, fill = County)) +
   geom_boxplot() + # Create a boxplot to show distribution of average download speeds
   labs(
     title = "Average Download Speed by County", # Title of the plot
@@ -129,7 +129,7 @@ ggplot(long_bristol, aes(x = City, y = speed, fill = speed_type)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) # Rotate x-axis labels for better readability
 
 # Save the Bristol bar chart as a PNG file in the specified directory
-ggsave(paste0(getwd(), "/Graphs/Broadband/bristol_down_median_bar_chart.png"))
+ggsave(paste0(getwd(), "/Graphs/Broadband/bristol_down_max_avg_bar_chart.png"))
 
 ####################################################################################################################################################
 
@@ -144,7 +144,7 @@ ggplot(long_cornwall, aes(x = City, y = speed, fill = speed_type)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) # Rotate x-axis labels for better readability
 
 # Save the Cornwall bar chart as a PNG file in the specified directory
-ggsave(paste0(getwd(), "/Graphs/Broadband/cornwall_down_median_bar_chart.png"))
+ggsave(paste0(getwd(), "/Graphs/Broadband/cornwall_down_max_avg_bar_chart.png"))
 
 
 
@@ -305,6 +305,67 @@ ggplot(robbery_rates, aes(x = "", y = percentage, fill = County)) +
 # Save the pie chart as a PNG file
 ggsave(paste0(getwd(), "/Graphs/Crime/Pi_Robbery_oct_2022.png"))
 
+####################################################################################################################################################
+
+population_2011 <- read_csv("Cleaned_datasets/Population_clean.csv") %>%
+  deframe()
+
+total_population <- sum(population_2011[c("Bristol", "Cornwall")], na.rm = TRUE)
+# Add the total to the list with the name 'Total'
+population_2011 <- c(population_2011, Total = total_population)
+# Remove the NA entry if it exists
+population_2011 <- population_2011[!is.na(names(population_2011))]
+
+population_2023 <- floor(1.0056125539388033 * population_2011)
+
+crime_dataset <- read_csv("Cleaned_datasets/Crime/Crime_Data_Combined.csv")
+
+vehicle_crime_2020_2023 <- crime_dataset %>%
+  filter(Crime == "Vehicle crime", year(date) >= 2020 & year(date) <= 2023)
+
+vehicle_crime_rate_2020_2023 <- vehicle_crime_2020_2023 %>%
+  mutate(
+    year = year(date)
+  ) %>%
+  group_by(year, County) %>%
+  summarize(
+    total_offences = n(),
+    .groups = "drop"
+  ) %>%
+  left_join(
+    tibble(
+      County = names(population_2023),
+      population = as.numeric(population_2023)
+    ),
+    by = "County"
+  ) %>%
+  mutate(offence_rate = (total_offences / population) * 10000) %>%
+  select(year, County, offence_rate)
+
+# Reshape the data for ggradar
+vehicle_crime_rate_wide <- vehicle_crime_rate_2020_2023 %>%
+  pivot_wider(names_from = year, values_from = offence_rate, names_prefix = "Year_") %>%
+  mutate(across(starts_with("Year_"), ~replace_na(., 0)))
+
+# Create radar chart
+ggradar(vehicle_crime_rate_wide,
+  values.radar = c("0", "5", "10"),
+  grid.min = 0,
+  grid.mid = 5,
+  grid.max = 10,
+  group.point.size = 3,
+  group.line.width = 1.5,
+  axis.label.size = 3,
+  legend.text.size = 10,
+  legend.position = "bottom",
+  background.circle.colour = "white",
+  axis.line.colour = "gray60",
+  gridline.mid.colour = "gray60"
+) +
+  labs(title = "Vehicle Crime Rate per 10,000 Population (2020-2023)")
+
+# Save the boxplot to a file
+ggsave(paste0(getwd(), "/Graphs/Crime/Radar_vehicle_2020_2023.png"))
 
 
 
@@ -321,7 +382,7 @@ ggsave(paste0(getwd(), "/Graphs/Crime/Pi_Robbery_oct_2022.png"))
 "
 
 # Read the cleaned school dataset and filter out data for Wiltshire
-school_dataset <- read_csv("Cleaned_datasets/Schools/Schools_Clean.csv") %>%
+school_dataset <- read_csv("Cleaned_datasets/Schools/school_cleaned_data.csv") %>%
   filter(County != "Wiltshire")
 
 # Subset the dataset to include only records for the year 2023
